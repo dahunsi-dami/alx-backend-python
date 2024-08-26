@@ -63,9 +63,17 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
-    """Class with a test_memoize method."""
+    """
+    Tests for memoize function in utils-
+    -to make sure it returns what it should.
+    """
 
     def test_memoize(self):
+        """
+        This test asserts that memoize function is
+        a wrapped method called only once and that
+        it returns what it should.
+        """
         class TestClass:
             """Simple class w/ a method & memoized property."""
 
