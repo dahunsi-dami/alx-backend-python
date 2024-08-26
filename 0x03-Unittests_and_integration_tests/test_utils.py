@@ -68,11 +68,17 @@ class TestMemoize(unittest.TestCase):
     def test_memoize(self):
         class TestClass:
             """Simple class w/ a method & memoized property."""
+
             def a_method(self):
+                """Simple method that returns 42."""
                 return 42
 
             @memoize
             def a_property(self):
+                """
+                Memoized property method that-
+                - returns result of a_method().
+                """
                 return self.a_method()
 
         TC_instance = TestClass()
