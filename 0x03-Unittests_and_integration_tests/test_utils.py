@@ -30,5 +30,37 @@ class TestAccessNestedMap(unittest.TestCase):
         self.assertEqual(str(context.exception), f"'{error}'")
 
 
+class TestGetJson(unittest.TestCase):
+    """
+    Tests for get_json function to return-
+    -what it should return.
+    """
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False}),
+    ])
+    # Patch (replace) requests.get method with utils module
+    @patch('utils.requests.get')
+    def test_get_json(self, test_url, test_payload, mock_get):
+        # Use mock object to mimic behavior of real HTTP response.
+        mock_response = Mock()
+
+        # Make mock_response return test_payload to-
+        # -simulate JSON resopnse by real HTTP request.
+        mock_response.json.return_value = test_payload
+
+        # Setting patched requests.get to-
+        # -return mock_response when called.
+        mock_get.return_value = mock_response
+
+        json_response = get_json(test_url)
+
+        # Test mocked get() was called only once per input-
+        # -w/ test_url as argument.
+        mock_get.assert_called_once_with(test_url)
+
+        self.assertEqual(json_response, test_payload)
+
+
 if __name__ == '__main__':
     unittest.main()
