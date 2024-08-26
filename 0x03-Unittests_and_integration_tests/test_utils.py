@@ -18,6 +18,14 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": {"b": 2}}, ("a", "b"), 2),
     ])
     def test_access_nested_map(self, nested_map, path, expected):
+        """
+        Tests access_nested_map w/ various input parameters.
+
+        Args:
+            nested_map: nested map (dict) to access.
+            path: structed path to access value in nested map.
+            expected: expected value at end of path.
+        """
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
     @parameterized.expand([
@@ -25,6 +33,15 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a", "b"), "b"),
     ])
     def test_access_nested_map_exception(self, nested_map, path, error):
+        """
+        Tests access_nested_map w/ invalid paths-
+        -to get expected KeyError.
+
+        Args:
+            nested_map: nested map (dict) to access.
+            path: structed path to access value in nested map.
+            error: expected error (KeyError).
+        """
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
         self.assertEqual(str(context.exception), f"'{error}'")
@@ -35,6 +52,7 @@ class TestGetJson(unittest.TestCase):
     Tests for get_json function to return-
     -what it should return.
     """
+
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False}),
@@ -42,6 +60,15 @@ class TestGetJson(unittest.TestCase):
     # Patch (replace) requests.get method with utils module
     @patch('utils.requests.get')
     def test_get_json(self, test_url, test_payload, mock_get):
+        """
+        Tests get_json w/ various URLs and expected payloads.
+
+        Args:
+            test_url: URL to get data from.
+            test_payload: expected payload from mocked request.
+            mock_get: patced `requests.get` mock object.
+        """
+
         # Use mock object to mimic behavior of real HTTP response.
         mock_response = Mock()
 
@@ -70,7 +97,7 @@ class TestMemoize(unittest.TestCase):
 
     def test_memoize(self):
         """
-        This test asserts that memoize function is
+        These tests assert that memoize function is
         a wrapped method called only once and that
         it returns what it should.
         """
