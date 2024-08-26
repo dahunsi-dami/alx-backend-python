@@ -67,6 +67,7 @@ class TestMemoize(unittest.TestCase):
 
     def test_memoize(self):
         class TestClass:
+            """Simple class w/ a method & memoized property."""
             def a_method(self):
                 return 42
 
