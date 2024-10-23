@@ -3,10 +3,11 @@
 
 import asyncio
 from random import uniform
+from typing import List
 wait_random = __import__('0-basic_async_syntax').wait_random
 
 
-async def wait_n(n: int, max_delay: int) -> list:
+async def wait_n(n: int, max_delay: int) -> List[float]:
     """
     Spawn wait_random n times w/ specced max_delay-
     -and return list of all delays in asc order.
