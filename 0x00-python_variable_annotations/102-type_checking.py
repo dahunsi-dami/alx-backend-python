@@ -3,6 +3,7 @@
 
 from typing import Tuple, List, Any
 
+
 def zoom_array(lst: Tuple, factor: int = 2) -> List:
     """Zooms in on elements of input tuple by a given factor."""
     zoomed_in: List = [
