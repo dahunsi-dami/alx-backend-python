@@ -85,8 +85,9 @@ class TestGithubOrgClient(unittest.TestCase):
             )
 
             client = GithubOrgClient("testorg")
-            repos = client.public_repos
+            repos = client.public_repos()
 
+            print(repos)
             self.assertEqual(repos, expected_repos)
 
             mock_public_repos_url.assert_called_once()
