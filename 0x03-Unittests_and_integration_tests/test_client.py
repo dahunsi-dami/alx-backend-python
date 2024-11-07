@@ -2,10 +2,11 @@
 """Unittests for client.py module."""
 import unittest
 from unittest.mock import patch, PropertyMock, MagicMock
+from typing import Dict
 from client import GithubOrgClient
 from parameterized import parameterized, parameterized_class
-from fixtures import org_payload, repos_payload
-from fixtures import expected_repos, apache2_repos
+from fixtures import TEST_PAYLOAD
+from requests import HTTPError
 
 
 class TestGithubOrgClient(unittest.TestCase):
