@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Unittests for client.py module."""
 import unittest
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock, MagicMock
 from client import GithubOrgClient
 from parameterized import parameterized
+from fixtures import org_payload, repos_payload
+from fixtures import expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -113,3 +115,44 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.has_license(repo, license_key)
 
         self.assertEqual(result, expected)
+
+    @parameterized_class([
+        {
+            "org_payload": org_payload,
+            "repos_payload": repos_payload,
+            "expected_repos": expected_repos,
+            "apache2_repos": apache2_repos
+         }
+    ])
+    class TestIntegrationGithubOrgClient(unittest.TestCase):
+        """
+        Integration test for GithubOrgClient.public_repos method.
+        """
+
+        @classmethod
+        def setUpClass(cls):
+            """
+            Set up class-level mock responses for external requests.
+            """
+            cls.get_patcher = patch('requests.get')
+            cls.mock_get = cls.get_patcher.start()
+
+            def get_json_side_effect(url):
+                if url == 'https://api.github.com/orgs/testorg':
+                    return cls.org_payload
+                elif url == 'https://api.github.com/orgs/testorg/repos':
+                    return cls.repos_payload
+                return None
+
+            cls.mock_get.return_value = MagicMock()
+            cls.mock_get.return_value.json.side_effect = get_json_side_effect
+
+        @classmethod
+        def tearDownClass(cls):
+            """Stop the patcher after all the tests."""
+            cls.get_patcher.stop()
+
+        def test_public_repos(self):
+            """Tests the public_repos method."""
+            client = GithubOrgClient("testorg")
+            self.assertEqual(client.public_repos(), self.expected_repos)
