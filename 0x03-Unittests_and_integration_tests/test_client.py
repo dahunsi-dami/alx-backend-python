@@ -63,34 +63,33 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         Test to ensure public_repos method returns-
         -the correct list of repos.
-
-        Args:
-            mock_get_json: the mocked get_json function.
         """
-        mock_get_json.return_value = [
-            {"name": "repo1"},
-            {"name": "repo2"},
-            {"name": "repo3"}
-        ]
+        with patch(
+            "client.get_json",
+            return_value=[{
+                "name": "repo1"},
+                {"name": "repo2"},
+                {"name": "repo3"}
+            ]
+        ) as mock_get_json:
 
-        expected_repos = ["repo1", "repo2", "repo3"]
-
-        with patch.object(
+            with patch.object(
                 GithubOrgClient,
                 '_public_repos_url',
                 new_callable=PropertyMock
-        ) as mock_public_repos_url:
-            mock_public_repos_url.return_value = (
-                "https://api.github.com/orgs/testorg/repos"
-            )
+            ) as mock_public_repos_url:
+                mock_public_repos_url.return_value = (
+                    "https://api.github.com/orgs/testorg/repos"
+                )
 
-            client = GithubOrgClient("testorg")
-            repos = client.public_repos()
+                client = GithubOrgClient("testorg")
+                repos = client.public_repos()
 
-            print(repos)
-            self.assertEqual(repos, expected_repos)
+                expected_repos = ["repo1", "repo2", "repo3"]
 
-            mock_public_repos_url.assert_called_once()
-            mock_get_json.assert_called_once_with(
-                "https://api.github.com/orgs/testorg/repos"
-            )
+                self.assertEqual(repos, expected_repos)
+
+                mock_public_repos_url.assert_called_once()
+                mock_get_json.assert_called_once_with(
+                    "https://api.github.com/orgs/testorg/repos"
+                )
